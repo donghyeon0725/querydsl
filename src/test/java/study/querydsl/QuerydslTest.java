@@ -1,26 +1,23 @@
 package study.querydsl;
 
-import com.mysema.commons.lang.Assert;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import study.querydsl.domain.Member;
+import study.querydsl.domain.Team;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
-import javax.swing.*;
 
 import java.util.List;
 
@@ -29,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static study.querydsl.QMember.*;
 import static study.querydsl.QTeam.team;
 
+// 기초 문법 정리
 @SpringBootTest
 @Transactional
 public class QuerydslTest {
@@ -526,6 +524,22 @@ public class QuerydslTest {
 
         for (String s : fetch)
             System.out.println("s = " + s);
+
+    }
+
+    @Test
+    @DisplayName("중복제거")
+    public void distinct() {
+        em.persist(new Member("member1"));
+
+        List<String> fetch = queryFactory
+                .select(member.username).distinct()
+                .from(member)
+                .fetch();
+
+
+        for (String name : fetch)
+            System.out.println("name = " + name);
 
     }
 }
